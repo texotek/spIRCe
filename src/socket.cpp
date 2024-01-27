@@ -1,22 +1,58 @@
 #include <socket.hpp>
 
-Socket::Socket(sa_family_t family, in_addr_t inaddr, uint16_t port)
+#include <errno.h>
+#include <iostream>
+
+net::socket::socket() {}
+
+net::socket::socket(int domain, int service, int protocol)
 {
-    insocket_addr.sin_family=family;
-    insocket_addr.sin_addr.s_addr=inaddr;
-    insocket_addr.sin_port = htons(port);
-}
-/**
- * param3
-*/
-int Socket::create(int ADDR_TYPE, int STREAM_TYPE) {
-    return this->socketfd = socket(ADDR_TYPE, STREAM_TYPE, 0);
+    // Define address structure
+    address.sin_family = domain;
+    address.sin_addr.s_addr = INADDR_ANY;
+    socketfd = ::socket(domain, service, protocol);
 }
 
-int Socket::sbind() {
-    return bind(this->socketfd, (const sockaddr*)&this->insocket_addr, sizeof(insocket_addr));
+int net::socket::listen(int port)
+{
+    address.sin_port = htons(port);
+    if(::bind(socketfd, (sockaddr*)&address, sizeof(address)) < 0) {
+        return -1; // socket binding error
+    }
+    if(::listen(socketfd, 20) < 0) {
+        return -2; // socket listening error
+    }
+    return 0;
 }
 
-int Socket::slisten() {
-    return listen(this->socketfd, 20);
+int net::socket::accept(socket *new_sock)
+{
+    
+    struct sockaddr_in client_addr;
+    socklen_t length = sizeof(client_addr);
+    int clientfd;
+    
+    if((clientfd = ::accept(socketfd, (sockaddr*)&client_addr, &length)) < 0) {
+        return -1;
+    }
+
+    new_sock->socketfd = clientfd;
+    new_sock->address = client_addr;
+
+    return 0;
+}
+
+ssize_t net::socket::write(char *buf, size_t len)
+{
+    return ::send(socketfd, buf, len, 0);
+}
+
+ssize_t net::socket::read(char *buf, size_t len)
+{
+    return ::recv(socketfd, buf, len, 0);
+}
+
+int net::socket::close(int how)
+{
+    return ::shutdown(socketfd, how);
 }

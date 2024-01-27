@@ -6,16 +6,23 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-class Socket
+namespace net
 {
-private:
-    struct sockaddr_in insocket_addr;
-public:
-    int socketfd;
-    Socket(sa_family_t family, in_addr_t inaddr, in_port_t inport);
-    int create(int ADDR_TYPE, int STREAM_TYPE);
-    int sbind();
-    int slisten();
-};
+    class socket
+    {
+    private:
+        struct sockaddr_in address;
+    public:
+        int socketfd;
+        socket();
+        socket(int domain, int service, int protocol);
+        int bind();
+        int listen(int port);
+        int accept(socket *newsock);
+        ssize_t write(char *buf, size_t len);
+        ssize_t read(char *buf, size_t len);
+        int close(int how);
 
+    };
+}
 #endif
