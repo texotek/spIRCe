@@ -1,21 +1,37 @@
 #include <iostream>
-#include <socket.hpp>
 #include <thread>
 
-#define info(msg) std::cerr << "(+) " << msg << std::endl;
+#include <utils.hpp>
+#include <socket.hpp>
+#include <irc.hpp>
+
+#define info(msg) std::cout << "(+) " << msg << std::endl;
 #define err(msg) std::cerr << msg << std::endl
 
+irc::server serv;
+
 void handle_client(net::socket client) {
-    char receivingbuffer[65536];
-    while(client.read(receivingbuffer, sizeof(receivingbuffer)) > 0) {
-        std::cout << receivingbuffer;
-        std::memset(receivingbuffer, 0, sizeof(receivingbuffer));
+    size_t recv_len;
+    char recv_buf[65536];
+
+    while((recv_len = client.read(recv_buf, sizeof(recv_buf))) > 0) {
+
+        std::string raw_message{recv_buf, recv_len};
+        std::vector<std::string> messages = utils::split_string(raw_message, "\r\n");
+        for(std::string s : messages) {
+            std::vector tokens = utils::split_string(s, " ");
+            if(tokens[0] == "NICK") {
+            }
+        }
+        std::memset(recv_buf, 0, sizeof(recv_buf));
     }
-    client.close(0);
+
+   client.close(0);
 }
 
 int main(int argc, char** argv) {
 
+    std::vector<std::thread> threads{};
     if(argc < 2) {
         err("Not enough arguments specified");
         err("Expected " << argv[0] << " <port>");
@@ -23,27 +39,24 @@ int main(int argc, char** argv) {
     }
 
     net::socket server_sock{AF_INET, SOCK_STREAM, IPPROTO_TCP};
-    server_sock.listen(std::atoi(argv[1]));
-    info("Started listening")
-
-    char recv_buf[65536];
-    std::memset(recv_buf, 0, sizeof(recv_buf));
+    if (server_sock.listen(std::atoi(argv[1])) < 0) {
+        err("Failed to start listening");
+        return -1;
+    };
+    info("Started listening");
 
     while(1) {
-        net::socket client{};
+        net::socket client;
         if(server_sock.accept(&client) < 0) {
             err("Error while accepting client");
             break;
         }
-        try
-        {
-            std::thread(handle_client, client);
-        }
-        catch(const std::exception& e)
-        {
-            std::cerr << e.what() << '\n';
-        }
-        
+        threads.push_back(std::thread(handle_client, client));
     }
 
+    for (size_t i = 0; i < threads.size(); i++)
+    {
+        threads[i].join();
+    }
+    
 }

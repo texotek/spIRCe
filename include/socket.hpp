@@ -16,7 +16,6 @@ namespace net
         int socketfd;
         socket();
         socket(int domain, int service, int protocol);
-        int bind();
         int listen(int port);
         int accept(socket *newsock);
         ssize_t write(char *buf, size_t len);
