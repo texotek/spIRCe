@@ -7,7 +7,13 @@ project(spIRCe)
 
 
 include_directories(include)
-add_executable(spirce src/main.cpp src/socket.cpp src/utils.cpp src/irc.cpp)
+add_executable(spirce 
+    src/main.cpp
+    src/Socket.cpp 
+    src/utils.cpp
+    src/Server.cpp
+    src/User.cpp
+)
 # contains an "external" library we will link to
 #add_subdirectory(lib)
 

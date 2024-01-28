@@ -1,11 +1,11 @@
-#include <socket.hpp>
+#include <Socket.hpp>
 
 #include <errno.h>
 #include <iostream>
 
-net::socket::socket() {}
+net::Socket::Socket() {}
 
-net::socket::socket(int domain, int service, int protocol)
+net::Socket::Socket(int domain, int service, int protocol)
 {
     // Define address structure
     address.sin_family = domain;
@@ -13,7 +13,7 @@ net::socket::socket(int domain, int service, int protocol)
     socketfd = ::socket(domain, service, protocol);
 }
 
-int net::socket::listen(int port)
+int net::Socket::listen(int port)
 {
     address.sin_port = htons(port);
     if(::bind(socketfd, (sockaddr*)&address, sizeof(address)) < 0) {
@@ -25,7 +25,7 @@ int net::socket::listen(int port)
     return 0;
 }
 
-int net::socket::accept(socket *new_sock)
+int net::Socket::accept(net::Socket *new_sock)
 {
     
     struct sockaddr_in client_addr;
@@ -42,17 +42,17 @@ int net::socket::accept(socket *new_sock)
     return 0;
 }
 
-ssize_t net::socket::write(char *buf, size_t len)
+ssize_t net::Socket::write(char *buf, size_t len)
 {
     return ::send(socketfd, buf, len, 0);
 }
 
-ssize_t net::socket::read(char *buf, size_t len)
+ssize_t net::Socket::read(char *buf, size_t len)
 {
     return ::recv(socketfd, buf, len, 0);
 }
 
-int net::socket::close(int how)
+int net::Socket::close(int how)
 {
     return ::shutdown(socketfd, how);
 }
