@@ -15,11 +15,12 @@ private:
     int port;
     net::Socket listener;
     std::vector<std::thread> threads;
-    std::vector<User> users;
+    //std::vector<User> users;
 public:
+
     Server(int port);
     int init();
-    void loop();
+    void accept_new_connection();
     void handle_new(net::Socket client);
     void register_new_user(net::Socket client, std::vector<std::string>& args);
 };

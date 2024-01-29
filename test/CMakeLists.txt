@@ -1,8 +1,3 @@
-add_executable(cpp_test test.cpp)
+add_executable(socket_test SocketTest.cpp)
 
-add_test(
-  NAME
-    test_evolution
-  COMMAND
-    $<TARGET_FILE:cpp_test>
-  )
+add_test(NAME socket_test COMMAND $<TARGET_FILE:socket_test>)

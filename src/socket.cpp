@@ -1,6 +1,5 @@
 #include <Socket.hpp>
 
-#include <errno.h>
 #include <iostream>
 
 net::Socket::Socket() {}

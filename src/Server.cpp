@@ -1,11 +1,9 @@
 #include <Server.hpp>
 
 #include <iostream>
+#include <fmt/core.h>
 
-
-Server::Server(int port):port(port)
-{
-}
+Server::Server(int port):port(port) {}
 
 int Server::init()
 {
@@ -16,20 +14,24 @@ int Server::init()
     return 0;
 }
 
-void Server::loop()
+void Server::accept_new_connection()
 {
-    net::Socket client;
-    if(listener.accept(&client) < 0) {
-        handle_new(client);
+    net::Socket socket;
+    if(listener.accept(&socket) < 0) {
+        fmt::println(stderr, "Failed to accept connection");
+        return;
     }
+
+    std::thread(&Server::handle_new, this, socket).detach();
 }
 
-
-void Server::handle_new(net::Socket client) {
+void Server::handle_new(net::Socket socket) {
     size_t recv_len;
     char recv_buf[512];
 
-    while((recv_len = client.read(recv_buf, sizeof(recv_buf))) > 0) {
+    fmt::println("Got new client");
+
+    while((recv_len = socket.read(recv_buf, sizeof(recv_buf))) > 0) {
         std::string raw_message{recv_buf, recv_len};
         std::vector<std::string> commands = utils::split_string(raw_message, "\r\n");
 
@@ -44,5 +46,5 @@ void Server::handle_new(net::Socket client) {
         }
         std::memset(recv_buf, 0, sizeof(recv_buf));
     }
-   client.close(0);
+   socket.close(0);
 }
