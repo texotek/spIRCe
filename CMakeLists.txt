@@ -5,8 +5,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 project(spIRCe)
 
-
 include_directories(include)
+
+add_subdirectory(lib)
+
 add_executable(spirce 
     src/main.cpp
     src/Socket.cpp 
