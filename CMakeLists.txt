@@ -19,6 +19,7 @@ add_executable(spirce
     src/utils.cpp
     src/Server.cpp
     src/User.cpp
+    src/Connection.cpp
 )
 
 # add library

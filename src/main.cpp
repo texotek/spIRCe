@@ -1,3 +1,14 @@
+/**
+ * @file main.cpp
+ * @author Felix Dahmen (fdahmen@proton.me)
+ * @brief  
+ * @version 0.1
+ * @date 2024-01-30
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #include <iostream>
 #include <csignal>
 #include <fmt/core.h>
@@ -6,14 +17,14 @@
 
 bool isrunning = true;
 
-void signal_handler(int signal)  {
-    fmt::println("Received signal {}", signal);
-    isrunning = false;
-}
+// void signal_handler(int signal)  {
+//     fmt::println("Received signal {}", signal);
+//     isrunning = false;
+// }
 
 int main(int argc, char** argv) {
     
-    std::signal(SIGINT, signal_handler);
+    // std::signal(SIGINT, signal_handler);
 
     if(argc < 2) {
         fmt::println(stderr, "No port is specified");
@@ -36,7 +47,7 @@ int main(int argc, char** argv) {
     }
 
     while(isrunning)
-        s.accept_new_connection();
+    s.accept_new_connection();
 
     return EXIT_SUCCESS;
 }

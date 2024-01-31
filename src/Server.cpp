@@ -3,7 +3,14 @@
 #include <iostream>
 #include <fmt/core.h>
 
-Server::Server(int port):port(port) {}
+#include <Connection.hpp>
+
+Server::Server(int port):port(port) {
+
+    //commands["NICK"] = &Server::command_nick;
+
+}
+
 
 int Server::init()
 {
@@ -22,6 +29,8 @@ void Server::accept_new_connection()
         return;
     }
 
+    Connection con{socket};
+
     std::thread(&Server::handle_new, this, socket).detach();
 }
 
@@ -30,7 +39,6 @@ void Server::handle_new(net::Socket socket) {
     char recv_buf[512];
 
     fmt::println("Got new client");
-
     while((recv_len = socket.read(recv_buf, sizeof(recv_buf))) > 0) {
         std::string raw_message{recv_buf, recv_len};
         std::vector<std::string> commands = utils::split_string(raw_message, "\r\n");
