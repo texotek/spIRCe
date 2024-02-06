@@ -5,9 +5,8 @@ cmake_minimum_required(VERSION 3.5.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# set project name
+# set the project name
 project(spIRCe)
-
 
 # Include directory
 include_directories(include)
@@ -18,7 +17,6 @@ add_executable(spirce
     src/Socket.cpp 
     src/utils.cpp
     src/Server.cpp
-    src/User.cpp
     src/Connection.cpp
 )
 

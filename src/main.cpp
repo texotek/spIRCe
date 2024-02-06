@@ -15,13 +15,6 @@
 
 #include <Server.hpp>
 
-bool isrunning = true;
-
-// void signal_handler(int signal)  {
-//     fmt::println("Received signal {}", signal);
-//     isrunning = false;
-// }
-
 int main(int argc, char** argv) {
     
     // std::signal(SIGINT, signal_handler);
@@ -33,10 +26,6 @@ int main(int argc, char** argv) {
     }
 
     int port = std::atoi(argv[1]);
-    if(!port) {
-        fmt::println(stderr, "Invalid port: {}", port);
-        return EXIT_FAILURE;
-    }
 
     fmt::println("Provided port: {}", port);
     Server s = Server{port};
@@ -46,8 +35,8 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    while(isrunning)
-    s.accept_new_connection();
+    while (true)
+        s.accept_new_connection();
 
     return EXIT_SUCCESS;
 }

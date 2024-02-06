@@ -41,22 +41,6 @@ int net::Socket::accept(net::Socket *new_sock)
     return 0;
 }
 
-int net::Socket::acceptnb(Socket *new_sock)
-{
-    struct sockaddr_in client_addr;
-    socklen_t length = sizeof(client_addr);
-    int clientfd;
-    
-    if((clientfd = ::accept(socketfd, (sockaddr*)&client_addr, &length)) < 0) {
-        return -1;
-    }
-
-    new_sock->socketfd = clientfd;
-    new_sock->address = client_addr;
-
-    return 0;
-}
-
 ssize_t net::Socket::write(char *buf, size_t len)
 {
     return ::send(socketfd, buf, len, 0);
