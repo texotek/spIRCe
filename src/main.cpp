@@ -11,13 +11,12 @@
 
 #include <iostream>
 #include <csignal>
-#include <fmt/core.h>
 
 #include <Server.hpp>
 
+#include <fmt/core.h>
+
 int main(int argc, char** argv) {
-    
-    // std::signal(SIGINT, signal_handler);
 
     if(argc < 2) {
         fmt::println(stderr, "No port is specified");

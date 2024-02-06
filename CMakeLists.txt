@@ -22,9 +22,7 @@ add_executable(spirce
 
 # add library
 add_subdirectory(lib/fmt)
-target_link_libraries(spirce fmt)
-# contains an "external" library we will link to
-#add_subdirectory(lib)
+target_link_libraries(spirce fmt::fmt)
 
 # enable testing and define tests
 enable_testing()

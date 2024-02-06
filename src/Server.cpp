@@ -1,10 +1,11 @@
-#include <Server.hpp>
-
 #include <iostream>
 #include <thread>
-#include <fmt/core.h>
 
+#include <Server.hpp>
+#include <numerics.hpp>
 #include <Connection.hpp>
+
+#include <fmt/core.h>
 
 Server::Server(int port) : port(port) {}
 
@@ -29,4 +30,13 @@ void Server::accept_new_connection()
 
     Connection con{this, socket};
     std::thread(&Connection::main_loop, con).detach();
+    connections.push_back(&con);
+}
+
+bool Server::check_nickname_used(std::string nick)
+{
+    for(Connection *con : connections) {
+        if(nick == con->get_nickname()) return true;
+    }
+    return false;
 }

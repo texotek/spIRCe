@@ -1,5 +1,6 @@
-#ifndef _SPIRCE_SOCKET_HPP_
-#define _SPIRCE_SOCKET_HPP_
+#pragma once
+
+#include <string>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -19,8 +20,8 @@ namespace net
         int listen(int port);
         int accept(Socket *newsock);
         ssize_t write(char *buf, size_t len);
+        ssize_t write(std::string buf);
         ssize_t read(char *buf, size_t len);
         int close(int how);
     };
 }
-#endif

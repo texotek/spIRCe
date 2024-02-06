@@ -46,6 +46,12 @@ ssize_t net::Socket::write(char *buf, size_t len)
     return ::send(socketfd, buf, len, 0);
 }
 
+ssize_t net::Socket::write(std::string buf)
+{
+    
+    return ::send(socketfd, buf.c_str(), buf.length(), 0);
+}
+
 ssize_t net::Socket::read(char *buf, size_t len)
 {
     return ::recv(socketfd, buf, len, 0);
